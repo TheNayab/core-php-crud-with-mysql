@@ -19,7 +19,7 @@ include("crud.php")
     form {
       border: 2px solid white;
       width: 50%;
-      height: 50vh;
+      height: 60vh;
       border-radius: 5px;
       padding: 3px;
       display: flex;
@@ -59,7 +59,7 @@ include("crud.php")
 </head>
 
 <body>
-  <form method="post" action="#">
+  <form method="post" action="#" enctype="multipart/form-data">
     First name:<br>
     <input type="text" name="first_name">
     <br>
@@ -72,8 +72,9 @@ include("crud.php")
     Email Id:<br>
     <input type="email" name="email">
     <br><br>
-    <input type="file" name="photo">
-    <br>
+    <input type="hidden" name="MAX_FILE_SIZE" value="512000" />
+    <input name="userfile" type="file" />
+    <br><br>
     <div class="btn">
       <input type="submit" name="save" value="submit">
     </div>
@@ -87,19 +88,26 @@ include("crud.php")
 <?php
 
 if (isset($_POST['save'])) {
+
+  $filename = $_FILES["userfile"]["name"];
+  $tempname = $_FILES["userfile"]["tmp_name"];
+  $folder = "uploads/" . $filename;
+  move_uploaded_file($tempname, $folder);
+
   $first_name = $_POST['first_name'];
   $last_name = $_POST['last_name'];
   $city_name = $_POST['city_name'];
   $email = $_POST['email'];
 
+
   if ($first_name != "" && $last_name != "" && $city_name != "" && $email != "") {
 
-    $sql = "INSERT INTO First VALUES ('$first_name','$last_name','$city_name','$email')";
+    $sql = "INSERT INTO First VALUES ('$folder','$first_name','$last_name','$city_name','$email')";
 
     if (mysqli_query($connection, $sql)) {
       echo "<script>alert('New record created successfully') </script>";
 ?>
-      <meta http-equiv="refresh" content="0; url = http://localhost/display.php" />
+      <meta http-equiv="refresh" content="0; url = http://localhost/crudoperation/display.php" />
 <?php
 
     } else {

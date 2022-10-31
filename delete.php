@@ -8,7 +8,7 @@ $data = mysqli_query($connection, $sql);
 if ($data) {
     echo "<script>alert('Successfully deleted...!')</script>";
 ?>
-    <meta http-equiv="refresh" content="0; url = http://localhost/display.php" />
+    <meta http-equiv="refresh" content="0; url = http://localhost/crudoperation/display.php" />
 <?php
 
 } else {

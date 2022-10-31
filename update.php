@@ -24,7 +24,7 @@ $result = mysqli_fetch_assoc($data);
         form {
             border: 2px solid white;
             width: 50%;
-            height: 44vh;
+            height: 60vh;
             border-radius: 5px;
             padding: 3px;
             display: flex;
@@ -34,8 +34,8 @@ $result = mysqli_fetch_assoc($data);
 
         form:hover {
             width: 52%;
-            height: 45vh;
-
+            height: 70vh;
+            box-shadow: 5px 5px 10px #ccc;
         }
 
         form input {
@@ -62,7 +62,7 @@ $result = mysqli_fetch_assoc($data);
 </head>
 
 <body>
-    <form method="post" action="#">
+    <form method="post" action="#" enctype="multipart/form-data">
         First name:<br>
         <input type="text" name="first_name" value="<?php echo $result['Fname'] ?>">
         <br>
@@ -75,6 +75,9 @@ $result = mysqli_fetch_assoc($data);
         Email Id:<br>
         <input type="email" name="email" value="<?php echo $result['Email'] ?>">
         <br><br>
+        <input type="hidden" name="MAX_FILE_SIZE" value="512000" />
+        <input name="userfile" type="file" />
+        <br><br>
         <div class="btn">
             <input type="submit" name="update" value="submit">
         </div>
@@ -86,6 +89,12 @@ $result = mysqli_fetch_assoc($data);
 <?php
 
 if (isset($_POST['update'])) {
+
+    $filename = $_FILES["userfile"]["name"];
+    $tempname = $_FILES["userfile"]["tmp_name"];
+    $folder = "uploads/" . $filename;
+    move_uploaded_file($tempname, $folder);
+
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $city_name = $_POST['city_name'];
@@ -93,13 +102,13 @@ if (isset($_POST['update'])) {
 
     if ($first_name != "" && $last_name != "" && $city_name != "" && $email != "") {
 
-        $sql = "UPDATE First set Fname='$first_name', Lname='$last_name', City='$city_name', Email='$email' WHERE Email='$id'";
+        $sql = "UPDATE First set std_img='$folder', Fname='$first_name', Lname='$last_name', City='$city_name', Email='$email' WHERE Email='$id'";
 
 
         if (mysqli_query($connection, $sql)) {
             echo "<script>alert('Successfully updated') </script>";
 ?>
-            <meta http-equiv="refresh" content="0; url = http://localhost/display.php" />
+            <meta http-equiv="refresh" content="0; url = http://localhost/crudoperation/display.php" />
 
 <?php
         } else {
